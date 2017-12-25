@@ -12,7 +12,9 @@ namespace CSharp {
 
         public void ProcessFile(Func<DcfSegment, bool> segmentRetreived, Action<string> invalidLine) {
             try {
-                using (var reader = new StreamReader(_filename)) {
+                using (var fs = File.Open(_filename, FileMode.Open, FileAccess.Read, FileShare.Read))
+                using (var bs = new BufferedStream(fs))
+                using (var reader = new StreamReader(bs)) {
                     while (!reader.EndOfStream) {
                         var line = reader.ReadLine();
                         if (string.IsNullOrEmpty(line)) {

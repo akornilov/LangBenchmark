@@ -4,11 +4,13 @@ public class DcfSegment {
     private final Position start;
     private final Position end;
     private final String clustId;
+    private final double length;
 
     public DcfSegment(Position start, Position end, String clustId) {
         this.start = start;
         this.end = end;
         this.clustId = clustId;
+        length = start.getDistance(end);
     }
 
     public Position getStart() {
@@ -24,6 +26,6 @@ public class DcfSegment {
     }
 
     public double getLength() {
-        return start.getDistance(end);
+        return length;
     }
 }
