@@ -10,8 +10,6 @@ namespace CSharp {
             new Performer(args.Length > 0 ? args[0] : null).Start();
             watch.Stop();
             Console.WriteLine("Finish: {0}ms", watch.Elapsed.TotalMilliseconds);
-
-            Console.ReadKey();
         }
     }
 }

@@ -9,8 +9,7 @@ class DcfFile(private val file: File) {
 
     fun processFile(segmentRetrieved: (DcfSegment) -> Boolean, invalidLine: (String) -> Unit) {
         BufferedReader(InputStreamReader(FileInputStream(file), "UTF-8")).use {
-            while (true) {
-                val line = it.readLine() ?: break
+            for (line in it.lineSequence()) {
                 val token = line.trim()
                 if (!token.startsWith("SEG:")) continue
                 val parts = token.split(':')

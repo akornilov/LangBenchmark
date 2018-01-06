@@ -2,7 +2,7 @@
 #include "dcffile.h"
 #include "dcfsegment.h"
 
-#include <QDebug>
+#include <iostream>
 
 #define RADIUS 5000.0
 
@@ -33,16 +33,16 @@ bool Performer::segmentReceived(const DcfSegment &segment)
 
 void Performer::invalidLine(const QString &line)
 {
-    qWarning() << "Invalid DCF line:" << line;
+    std::cerr << "Invalid DCF line: " << line.toStdString() << std::endl;
 }
 
 int Performer::start()
 {
     foreach (const QFileInfo &file, mDirectory.entryInfoList()) {
-        qDebug() << "Processing" << file.fileName() << "...";
+        std::cout << "Processing '" << file.fileName().toStdString() << "'..." << std::endl;
         DcfFile dcf(file.filePath());
         dcf.processFile(this);
     }
-    qDebug() << "Found" << mSegments.size() << "segments;";
+    std::cout << "Found " << mSegments.size() << " segments;" << std::endl;
     return 0;
 }

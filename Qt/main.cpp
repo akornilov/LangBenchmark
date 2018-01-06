@@ -1,15 +1,16 @@
 #include "performer.h"
 
+#include <iostream>
+
 #include <QTime>
-#include <QDebug>
 
 int main(int argc, char *argv[])
 {
     QTime time;
     time.start();
-    qDebug() << "Start...";
+    std::cout << "Start..." << std::endl;
     Performer performer(argc > 1 ? argv[1] : QString());
     const auto result = performer.start();
-    qDebug() << "Finish:" << time.elapsed() << "ms";
+    std::cout << "Finish: " << time.elapsed() << "ms" << std::endl;
     return result;
 }

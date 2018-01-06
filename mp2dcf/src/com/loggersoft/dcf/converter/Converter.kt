@@ -26,6 +26,8 @@ internal class Converter(private val inputDirectory: String,
             for (file in files) {
                 processFile(file, File(output, file.nameWithoutExtension + EXT_DCF))
             }
+        } else {
+            println("Source files not found.")
         }
     }
 
@@ -37,10 +39,24 @@ internal class Converter(private val inputDirectory: String,
         println("Converting '${input.name}' to '$output'...")
         BufferedReader(InputStreamReader(FileInputStream(input), DEFAULT_ENCODING)).use { reader ->
             PrintWriter(OutputStreamWriter(FileOutputStream(output), DEFAULT_ENCODING)).use { writer ->
+
+                fun processBlock(line: String, clustId: String?) {
+                    val dataMatch = regexpData.matchEntire(line)
+                    if (dataMatch != null) {
+                        val positions = regexpPosition.findAll(dataMatch.groupValues[1])
+                        var prevPos: MatchResult? = null
+                        for (position in positions) {
+                            if (prevPos != null) {
+                                writer.println("SEG:${prevPos.groupValues[2]}:${prevPos.groupValues[1]}:${position.groupValues[2]}:${position.groupValues[1]}:ClustID:$clustId")
+                            }
+                            prevPos = position
+                        }
+                    }
+                }
+
                 var currentWayId: String? = null
                 var isBlock = false
-                while (true) {
-                    val line = reader.readLine() ?: break
+                for(line in reader.lineSequence()) {
                     val blockMatch = regexpBlock.matchEntire(line)
                     if (blockMatch != null) {
                         if (blockMatch.groupValues[1].toUpperCase() == BLOCK_POLYLINE) {
@@ -51,17 +67,7 @@ internal class Converter(private val inputDirectory: String,
                         }
 
                     } else if (isBlock) {
-                        val dataMatch = regexpData.matchEntire(line)
-                        if (dataMatch != null) {
-                            val positions = regexpPosition.findAll(dataMatch.groupValues[1])
-                            var prevPos: MatchResult? = null
-                            for (position in positions) {
-                                if (prevPos != null) {
-                                    writer.println("SEG:${prevPos.groupValues[2]}:${prevPos.groupValues[1]}:${position.groupValues[2]}:${position.groupValues[1]}:ClustID:$currentWayId")
-                                }
-                                prevPos = position
-                            }
-                        }
+                        processBlock(line, currentWayId)
 
                     } else {
                         val wayIdMatch = regexpWayId.matchEntire(line)
