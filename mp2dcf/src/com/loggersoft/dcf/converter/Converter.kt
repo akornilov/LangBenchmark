@@ -24,7 +24,11 @@ internal class Converter(private val inputDirectory: String,
         }
         if (files != null) {
             for (file in files) {
-                processFile(file, File(output, file.nameWithoutExtension + EXT_DCF))
+                try {
+                    processFile(file, File(output, file.nameWithoutExtension + EXT_DCF))
+                } catch (e: IOException) {
+                    println(e.localizedMessage)
+                }
             }
         } else {
             println("Source files not found.")
@@ -37,7 +41,7 @@ internal class Converter(private val inputDirectory: String,
 
     private fun processFile(input: File, output: File) {
         println("Converting '${input.name}' to '$output'...")
-        BufferedReader(InputStreamReader(FileInputStream(input), DEFAULT_ENCODING)).use { reader ->
+        BufferedReader(InputStreamReader(FileInputStream(input), DEFAULT_ENCODING)).useLines { lines ->
             PrintWriter(OutputStreamWriter(FileOutputStream(output), DEFAULT_ENCODING)).use { writer ->
 
                 fun processBlock(line: String, clustId: String?) {
@@ -56,7 +60,7 @@ internal class Converter(private val inputDirectory: String,
 
                 var currentWayId: String? = null
                 var isBlock = false
-                for(line in reader.lineSequence()) {
+                for(line in lines) {
                     val blockMatch = regexpBlock.matchEntire(line)
                     if (blockMatch != null) {
                         if (blockMatch.groupValues[1].toUpperCase() == BLOCK_POLYLINE) {

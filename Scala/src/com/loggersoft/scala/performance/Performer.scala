@@ -1,7 +1,6 @@
 package com.loggersoft.scala.performance
 
-import java.io.File
-import java.io.FilenameFilter
+import java.io.{File, FilenameFilter, IOException}
 
 import scala.collection.mutable.ArrayBuffer
 import scala.collection.mutable.HashMap
@@ -17,7 +16,11 @@ class Performer(val directory: String) extends FilenameFilter {
     if (files != null) {
       for (f <- files) {
         println(s"Processing '${f.getName()}'...")
-        new DcfFile(f).processFile(segmentRetrieved _, invalidLine _)
+        try {
+          new DcfFile(f).processFile(segmentRetrieved _, invalidLine _)
+        } catch {
+          case e: IOException => println(e.getLocalizedMessage)
+        }
       }
     }
     println(s"Found ${segments.size} segments;")

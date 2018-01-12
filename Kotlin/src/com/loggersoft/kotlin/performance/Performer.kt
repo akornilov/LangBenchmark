@@ -2,6 +2,7 @@ package com.loggersoft.kotlin.performance
 
 import java.io.File
 import java.io.FilenameFilter
+import java.io.IOException
 
 class Performer(directory: String?) : FilenameFilter {
     private val dir: File = File(directory ?: ".")
@@ -17,7 +18,11 @@ class Performer(directory: String?) : FilenameFilter {
         if (files != null) {
             for (f in files) {
                 println("Processing ${f.name}...")
-                DcfFile(f).processFile(::segmentRetrieved, ::invalidLine)
+                try {
+                    DcfFile(f).processFile(::segmentRetrieved, ::invalidLine)
+                } catch (e: IOException) {
+                    println(e.localizedMessage)
+                }
             }
         }
         println("Found ${segments.size} segments;")

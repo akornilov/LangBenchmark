@@ -8,8 +8,8 @@ import java.io.InputStreamReader
 class DcfFile(private val file: File) {
 
     fun processFile(segmentRetrieved: (DcfSegment) -> Boolean, invalidLine: (String) -> Unit) {
-        BufferedReader(InputStreamReader(FileInputStream(file), "UTF-8")).use {
-            for (line in it.lineSequence()) {
+        BufferedReader(InputStreamReader(FileInputStream(file), "UTF-8")).useLines {
+            for (line in it) {
                 val token = line.trim()
                 if (!token.startsWith("SEG:")) continue
                 val parts = token.split(':')

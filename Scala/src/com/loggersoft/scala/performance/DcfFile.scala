@@ -27,7 +27,7 @@ class DcfFile(private val file: File) {
       return new DcfSegment(new Position(parts(2).toDouble, parts(1).toDouble),
                             new Position(parts(4).toDouble, parts(3).toDouble),
                             parts(index + 1))
-    } catch  {
+    } catch {
       case e: NumberFormatException => return null
     }
   }

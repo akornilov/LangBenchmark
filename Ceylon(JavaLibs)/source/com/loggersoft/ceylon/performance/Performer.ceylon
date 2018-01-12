@@ -1,5 +1,5 @@
 import java.util { HashMap, ArrayList, List, Map }
-import java.io { File }
+import java.io { File, IOException }
 
 shared class Performer(String? directory) {
     File dir = File(if (exists directory) then directory else ".");
@@ -14,7 +14,11 @@ shared class Performer(String? directory) {
         if (exists list = dir.listFiles(accept)) {
             for (f in list) {
                 print("Processing ``f.name``...");
-                DcfFile(f).processFile(segmentRetreived, invalidLine);
+                try {
+                    DcfFile(f).processFile(segmentRetreived, invalidLine);
+                } catch (IOException e) {
+                    print(e.message);
+                }
             }
         }
         print("Found ``segments.size()`` segments;");
