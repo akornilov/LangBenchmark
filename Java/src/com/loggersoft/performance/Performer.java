@@ -13,7 +13,7 @@ public class Performer implements DcfFile.IEventHandler, FilenameFilter {
 
     private final Map<String, List<DcfSegment> > segments = new HashMap<String, List<DcfSegment> >();
     private Position pos;
-    private double radius = 5000;
+    private double radius = 5000.0;
 
     public Performer(String directory) {
         this.directory = new File(directory != null ? directory : ".");

@@ -3,7 +3,7 @@ package com.loggersoft.performance;
 import java.io.*;
 
 public class DcfFile {
-    private File file;
+    private final File file;
     private static final String CLUST_ID = "ClustID";
 
     public interface IEventHandler {

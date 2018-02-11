@@ -10,7 +10,7 @@ public class Position {
     }
 
     public boolean isValid() {
-        return (lat >= -90.0 && lat <= 90.0 && lon >= -180 && lon <= 180);
+        return (lat >= -90.0 && lat <= 90.0 && lon >= -180.0 && lon <= 180.0);
     }
 
     public double getLat() {
