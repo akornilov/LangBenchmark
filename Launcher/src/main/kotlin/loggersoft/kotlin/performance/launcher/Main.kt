@@ -18,7 +18,7 @@ package loggersoft.kotlin.performance.launcher
 
 fun main() {
     try {
-        val sourceData = SourceData(iterations = 1)
+        val sourceData = SourceData(iterations = 5)
         if (sourceData.dataSets.isEmpty()) {
             println("Directory '${sourceData.location}' doesn't contains any data sets (*.7z).")
             return
