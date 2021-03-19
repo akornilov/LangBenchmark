@@ -1,4 +1,4 @@
-name "D"
+name "d-benchmark"
 description "D language performance test."
 authors "LoggerSoft"
 license "proprietary"

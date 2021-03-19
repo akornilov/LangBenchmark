@@ -1,0 +1,16 @@
+plugins {
+    id 'application'
+    id 'org.jetbrains.kotlin.jvm' version '1.4.31'
+}
+
+repositories {
+    mavenCentral()
+}
+
+compileKotlin {
+    kotlinOptions.jvmTarget = '1.8'
+    kotlinOptions.useIR = true
+}
+
+defaultTasks 'run'
+mainClassName = 'com.loggersoft.dcf.converter.MainKt'

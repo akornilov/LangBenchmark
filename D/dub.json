@@ -1,0 +1,6 @@
+{
+	"name" : "d-benchmark",
+	"description" : "D language performance test.",
+	"dependencies" : {
+	}
+}

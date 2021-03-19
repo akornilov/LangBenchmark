@@ -1,29 +1,34 @@
+/*
+ * Copyright (C) 2021 Alexander Kornilov (akornilov.82@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 #include "dcffile.h"
-#include "ieventhandler.h"
 #include "dcfsegment.h"
 
 #include <QTextStream>
-#include <QDebug>
-
-DcfFile::DcfFile(const QString &file) :
-    mFile(file)
-{
-}
-
-DcfFile::~DcfFile()
-{
-}
 
 void DcfFile::processFile(IEventHandler *handler)
 {
-    if (handler && mFile.open(QIODevice::ReadOnly)) {
-        QTextStream stream(&mFile);
+    if (handler && _file.open(QIODevice::ReadOnly)) {
+        QTextStream stream(&_file);
         while (!stream.atEnd()) {
             const QString &line = stream.readLine().trimmed();
             if (line.isEmpty() || !line.startsWith("SEG:")) {
                 continue;
             }
-            const QStringList &parts = line.split(":");
+            const QStringList& parts = line.split(":");
             if (parts.size() < 6) {
                 handler->invalidLine(line);
                 continue;
@@ -68,6 +73,6 @@ void DcfFile::processFile(IEventHandler *handler)
                 break;
             }
         }
-        mFile.close();
+        _file.close();
     }
 }

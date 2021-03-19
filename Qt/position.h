@@ -1,41 +1,69 @@
+/*
+ * Copyright (C) 2021 Alexander Kornilov (akornilov.82@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 #ifndef POSITION_H
 #define POSITION_H
 
-class Position
+#include <QtMath>
+
+#include <cmath>
+
+class Position final
 {
 public:
-    explicit Position();
-    explicit Position(double lat, double lon);
-    Position(const Position& other);
-    virtual ~Position();
-
-    Position& operator= (const Position& other);
+    Position(double lat, double lon):
+        _lat(lat),
+        _lon(lon)
+    {
+    }
 
     bool isValid() const {
-        return mLat >= -90.0 && mLat <= 90.0 && mLon >= -180 && mLon <= 180;
+        return _lat >= -90.0 && _lat <= 90.0 && _lon >= -180.0 && _lon <= 180.0;
     }
 
     double getLat() const {
-        return mLat;
+        return _lat;
     }
 
     double getLon() const {
-        return mLon;
+        return _lon;
     }
 
     void setLat(double lat) {
-        mLat = lat;
+        _lat = lat;
     }
 
     void setLon(double lon) {
-        mLon = lon;
+        _lon = lon;
     }
 
-    double getDistance(const Position &other) const;
+    double getDistance(const Position &other) const {
+        const auto lat1 = qDegreesToRadians(_lat);
+        const auto lon1 = qDegreesToRadians(_lon);
+        const auto lat2 = qDegreesToRadians(other._lat);
+        const auto lon2 = qDegreesToRadians(other._lon);
+        const auto sinLat = sin((lat2 - lat1) / 2.0);
+        const auto sinLon = sin((lon2 - lon1) / 2.0);
+        const auto a = sinLat * sinLat + cos(lat1) * cos(lat2) * sinLon * sinLon;
+        return 2.0 * atan2(sqrt(a), sqrt(1.0 - a));
+    }
 
 private:
-    double mLat;
-    double mLon;
+    double _lat;
+    double _lon;
 };
 
 #endif // POSITION_H

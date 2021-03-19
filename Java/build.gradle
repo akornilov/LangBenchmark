@@ -1,0 +1,6 @@
+plugins {
+    id 'application'
+}
+
+defaultTasks 'run'
+mainClassName = 'com.loggersoft.performance.Main'

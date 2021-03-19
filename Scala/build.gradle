@@ -1,0 +1,15 @@
+plugins {
+    id 'scala'
+    id 'application'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.scala-lang:scala-library:2.13.5'
+}
+
+defaultTasks 'run'
+mainClassName = 'com.loggersoft.scala.performance.Main'

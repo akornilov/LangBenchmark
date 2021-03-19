@@ -1,0 +1,14 @@
+plugins {
+    id 'cpp-application'
+    id 'loggersoft.cpp-ide-generator' version '1.0'
+    id 'loggersoft.cpp-build-tuner' version '1.9'
+}
+
+buildTuner {
+    standard = 17
+    libraries.linux = ['stdc++fs']
+}
+
+ide {
+    qtCreator = true
+}
