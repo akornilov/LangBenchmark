@@ -56,6 +56,7 @@ private val playersCls: List<Class<out Player>> = listOf(
     PlayerScala::class.java,
     PlayerKotlin::class.java,
     PlayerDotNet::class.java,
+    PlayerCSharp::class.java,
     PlayerCpp::class.java,
     PlayerQt::class.java,
     PlayerD::class.java,
@@ -144,6 +145,32 @@ private class PlayerLauncherCMake(private val binaryName: String): Player.Launch
     }
 }
 
+private class PlayerLauncherMono: Player.Launcher {
+    private val execBuild: Executable? = try { Executable("mdtool") } catch (_: Exception) { null }
+    private val execMono: Executable? = try { Executable("mono") } catch (_: Exception) { null }
+
+    override val isAvailable: Boolean = execBuild != null && execMono != null
+
+    override fun launch(workingDirectory: File, sourceDirectory: File, handler: (String, Executable.OutputType) -> Unit): Int {
+        check(execBuild != null && execMono != null) { "The Mono is not available" }
+        check(execBuild.launcher(listOf("build", "-c:Release", "CSharp.csproj")).apply { this.workingDirectory = workingDirectory }.start().get() == 0) { "Failed to build via mdtool" }
+        return execMono.launcher(listOf("bin/Release/CSharp.exe", sourceDirectory.toString()), handler).apply { this.workingDirectory = workingDirectory }.start().get()
+    }
+}
+
+private class PlayerLauncherMSBuild: Player.Launcher {
+    private val executable: Executable? = try { Executable("msbuild") } catch (_: Exception) { null }
+
+    override val isAvailable: Boolean = executable != null
+
+    override fun launch(workingDirectory: File, sourceDirectory: File, handler: (String, Executable.OutputType) -> Unit): Int {
+        check(executable != null) { "The MSBuild is not available" }
+        check(executable.launcher(listOf("CSharp.sln", "-p:Configuration=Release")).apply { this.workingDirectory = workingDirectory }.start().get() == 0) { "Failed to build via MSBuild" }
+        return Executable(File(workingDirectory, "bin/Release/CSharp.exe").path)
+            .launcher(listOf(sourceDirectory.toString()), handler).apply { this.workingDirectory = workingDirectory }.start().get()
+    }
+}
+
 private class PlayerLauncherGradle(runTask: String = "run", cache: LookupCache? = null): PlayerLauncherSimple("gradle", cache, { listOf(runTask, "--args=${it}")})
 
 private open class PlayerGradle(name: String, runTask: String = "run"): PlayerImpl(name, PlayerLauncherGradle(runTask))
@@ -151,7 +178,8 @@ private class PlayerJava: PlayerGradle("Java")
 private class PlayerScala: PlayerGradle("Scala")
 private class PlayerKotlin: PlayerGradle("Kotlin")
 private class PlayerD: PlayerImpl("D", PlayerLauncherSimple("dub") { listOf("run", "-b", "release", "--", it.toString()) })
-private class PlayerDotNet: PlayerImpl("DotNet", PlayerLauncherSimple("dotnet") { listOf("run", "-c", "Release", "--", it.toString()) }, File("../CSharp"))
+private class PlayerDotNet: PlayerImpl("DotNet", PlayerLauncherSimple("dotnet") { listOf("run", "-c", "Release", "--", it.toString()) })
+private class PlayerCSharp: PlayerImpl("CSharp", if (currentPlatform == Platform.Windows) PlayerLauncherMSBuild() else PlayerLauncherMono())
 private class PlayerKotlinNative: PlayerImpl("KotlinNative", PlayerLauncherKotlinNative(), enabled = currentPlatform != Platform.Windows)
 private class PlayerQt: PlayerImpl("Qt", PlayerLauncherCMake("qtperf"))
 private class PlayerCpp: PlayerGradle("C++", "runRelease")
