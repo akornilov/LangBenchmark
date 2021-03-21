@@ -122,7 +122,7 @@ private class PlayerLauncherKotlinNative: Player.Launcher {
     override fun launch(workingDirectory: File, sourceDirectory: File, handler: (String, Executable.OutputType) -> Unit): Int {
         check(executable != null) { "The Gradle is not available" }
         check(executable.launcher(listOf("assemble")).apply { this.workingDirectory = workingDirectory }.start().get() == 0) { "Failed to assemble KotlinNative" }
-        return Executable(File(workingDirectory, "build/bin/native/releaseExecutable/KotlinNative.kexe").path)
+        return Executable(File(workingDirectory, "build/bin/native/releaseExecutable/KotlinNative.${if (currentPlatform == Platform.Windows) "exe" else "kexe"}").path)
                 .launcher(listOf(sourceDirectory.toString()), handler).apply { this.workingDirectory = workingDirectory }.start().get()
     }
 }
@@ -180,6 +180,6 @@ private class PlayerKotlin: PlayerGradle("Kotlin")
 private class PlayerD: PlayerImpl("D", PlayerLauncherSimple("dub") { listOf("run", "-b", "release", "--", it.toString()) })
 private class PlayerDotNet: PlayerImpl("DotNet", PlayerLauncherSimple("dotnet") { listOf("run", "-c", "Release", "--", it.toString()) })
 private class PlayerCSharp: PlayerImpl("CSharp", if (currentPlatform == Platform.Windows) PlayerLauncherMSBuild() else PlayerLauncherMono())
-private class PlayerKotlinNative: PlayerImpl("KotlinNative", PlayerLauncherKotlinNative(), enabled = currentPlatform != Platform.Windows)
+private class PlayerKotlinNative: PlayerImpl("KotlinNative", PlayerLauncherKotlinNative())
 private class PlayerQt: PlayerImpl("Qt", PlayerLauncherCMake("qtperf"))
 private class PlayerCpp: PlayerGradle("C++", "runRelease")
