@@ -35,7 +35,7 @@ Data sets are placed in 'Data' directory (7z archives). You can prepare your own
 
 ## Platforms and versions
 
-# Common
+### Common
 * Kotlin 1.4.31 (IR compiler)
 * KotlinNative 1.4.31
 * Java 1.8.0.281
@@ -43,17 +43,17 @@ Data sets are placed in 'Data' directory (7z archives). You can prepare your own
 * DotNet 5.0
 * D dmd 2.096.0
 
-# Windows 10.0.19041.868 (Win10 20H1 [2004] May 2020 Update)
+### Windows 10.0.19041.868 (Win10 20H1 [2004] May 2020 Update)
 * C++ msvc 19.28.29913
 * Qt 5.12.10
 * CSharp msvc 2019 16.9.2
 
-# Linux Debian 4.19.171-2 (2021-01-30) x86_64 GNU/Linux
+### Linux Debian 4.19.171-2 (2021-01-30) x86_64 GNU/Linux
 * C++ gcc 8.3.0
 * Qt 5.11.3
 * CSharp mono 6.12.0.122
 
-# Results for Windows:
+## Results for Windows:
   1. Kotlin: 2147ms, 1,00
   2. Java: 2151ms, 1,00
   3. Scala: 2203ms, 1,03
@@ -64,7 +64,7 @@ Data sets are placed in 'Data' directory (7z archives). You can prepare your own
   8. DotNet: 6096ms, 2,84
   9. KotlinNative: 30092ms, 14,02
 
-# Results for Linux:
+## Results for Linux:
   1. Kotlin: 1958ms, 1,00
   2. Java: 1965ms, 1,00
   3. Scala: 2022ms, 1,03
